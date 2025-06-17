@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlmodel
+psycopg2
+python-multipart
+python-jose
+passlib[bcrypt]
+python-dotenv
+pydantic-settings
+python-json-logger
+bcrypt==3.2.0
+fastapi-pagination
+twilio
+pydantic[email]
