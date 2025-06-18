@@ -58,8 +58,10 @@ class UpdateOrderReturnStatus(BaseModel):
 
 class OfflineOrderResponse(OfflineOrderBase):
     id: str
+    is_returned: bool  # ✅ Add this line
     created_datetime: datetime
     updated_datetime: datetime
 
     class Config:
         orm_mode = True
+

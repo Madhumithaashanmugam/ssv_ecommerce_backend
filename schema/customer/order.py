@@ -43,11 +43,12 @@ class OrderItem(BaseModel):
     item_name: str
     quantity: int
     unit_price: float
-    total_price: float  # MRP × Quantity
-    discount: float
-    additional_discount: float
+    total_price: float
+    discount: Optional[float] = 0.0
+    additional_discount: Optional[float] = 0.0
     product_image: Optional[str]
     note: Optional[str] = None
+
 
 
 
