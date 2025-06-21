@@ -45,16 +45,15 @@ class Order(Base):
     address = Column(String, nullable=False)
     city = Column(String, nullable=False)
     state = Column(String, nullable=False)
-
     created_datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'")
+        server_default=text("CURRENT_TIMESTAMP")
     )
 
     updated_datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'"),
+        server_default=text("CURRENT_TIMESTAMP"),
         onupdate=func.now()
     )

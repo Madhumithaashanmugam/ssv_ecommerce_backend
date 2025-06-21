@@ -3,6 +3,11 @@ from sqlalchemy.orm import Session
 
 # Utils
 from utils.jwt_handler import create_access_token
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 
 # Database
 from config.db.session import get_db
@@ -26,13 +31,15 @@ from schema.customer.user_schema import (
 
 # Services
 from service.customer.userservices import (
-    update_user_by_id,
+    # update_user_by_id,
     delete_user_by_id,
     request_otp,
     verify_otp,
     register_after_otp,
     request_reset_password,
     reset_password,
+    get_user_by_id,
+    update_user_by_id
 )
 
 # Routers
@@ -83,20 +90,18 @@ def list_customer_users(db: Session = Depends(get_db)):
 
 
 
-@user_router.get("/{user_id}", response_model=ViewUser, status_code=status.HTTP_200_OK)
-def get_customer_user(user_id: str, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    return user
+    
+# @user_router.get("/user_id}", response_model=ViewUser)
+# def read_user_by_id(user_id: str, db: Session = Depends(get_db)):
+#     return get_user_by_id(user_id, db)
 
 
-@user_router.put("/{user_id}", response_model=ViewUser, status_code=status.HTTP_200_OK)
-def update_customer_user(user_id: str, user: UpdateUser, db: Session = Depends(get_db)):
-    updated_user = update_user_by_id(user_id, user, db)
-    if not updated_user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    return updated_user
+# @user_router.put("/{user_id}", response_model=ViewUser, status_code=status.HTTP_200_OK)
+# def update_customer_user(user_id: str, user: UpdateUser, db: Session = Depends(get_db)):
+#     updated_user = update_user_by_id(user_id, user, db)
+#     if not updated_user:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+#     return updated_user
 
 
 @user_router.delete("/{user_id}", status_code=status.HTTP_200_OK)
@@ -107,6 +112,11 @@ def delete_customer_user(user_id: str, db: Session = Depends(get_db)):
 # ----------------------------------------
 #           FORGOT PASSWORD API ROUTES
 # ----------------------------------------
+
+@user_router.get("/user/{user_id}", response_model=ViewUser)
+def read_user_by_id(user_id: str, db: Session = Depends(get_db)):
+    user = get_user_by_id(user_id, db)
+    return user
 
 @auth_router.post("/request-reset-otp")
 def request_reset_otp(payload: ForgotPasswordRequest, db: Session = Depends(get_db)):
@@ -137,3 +147,8 @@ def reset_user_password(payload: ResetPasswordRequest, db: Session = Depends(get
     Reset the user's password after OTP verification.
     """
     return reset_password(payload.email, payload.otp, payload.new_password, db)
+
+
+@user_router.put("/user/{user_id}", response_model=ViewUser)
+def update_user(user_id: str, user_data: UpdateUser, db: Session = Depends(get_db)):
+    return update_user_by_id(user_id, user_data, db)

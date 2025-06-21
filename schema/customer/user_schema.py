@@ -58,6 +58,10 @@ class ViewUser(BaseModel):
     created_datetime: Optional[datetime]
     updated_datetime: Optional[datetime]
 
+    class Config:
+        orm_mode = True  # ✅ enables parsing SQLAlchemy objects directly
+
+
 # ----------- Token / Auth -----------
 
 class UserDetails(BaseModel):
